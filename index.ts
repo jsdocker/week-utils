@@ -4,9 +4,9 @@ export default class WeekUtil {
   firstDay: number = 1;
   lastDay: number = 7;
   /**
-   * 构造函数
-   * @param dow 默认值：1
-   * @param doy 默认值：4
+   * constructor
+   * @param dow default：1
+   * @param doy default：4
    */
   constructor(dow?: number, doy?: number) {
     if(dow === 0 && doy === 6) {
@@ -19,9 +19,9 @@ export default class WeekUtil {
   }
 
   /**
-   * 返回指定年份、指定周数的开始及结束时间 {weekStart: Date, weekEnd: Date}
-   * @param year 指定年份
-   * @param n 指定周数
+   * return a specific year and week date, result like: {weekStart: Date, weekEnd: Date}
+   * @param year year
+   * @param n week number
    */
   getWeekDate(year: number, n: number) {
     const start = this.dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
@@ -74,8 +74,8 @@ export default class WeekUtil {
   }
 
   /**
-   * 返回指定日期的周数，默认当前时间
-   * @param date 指定日期
+   * return a specific date's week
+   * @param date the date
    */
   curWeek(date?: Date) {
     let mom = new Date()
@@ -133,8 +133,8 @@ export default class WeekUtil {
   }
 
   /**
-   * 返回指定年份的总周数
-   * @param input 指定年份
+   * return the total weeks in a year
+   * @param input the year
    */
   localWeeks(input: number) {
     return this.weeksInYear(input, this.dow, this.doy);
