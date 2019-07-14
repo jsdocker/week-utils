@@ -32,11 +32,6 @@ export default class WeekUtil {
     };
   }
 
-  getWeekTest() {
-    const res = this.dayOfYearFromWeeks(2019, 28, 1, this.dow, this.doy);
-    return res.dayOfYear;
-  }
-
   dayOfYearFromWeeks(
     year: number,
     week: number,
