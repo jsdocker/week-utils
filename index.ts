@@ -19,7 +19,7 @@ export default class WeekUtil {
   }
 
   /**
-   * return a specific year and week date, result like: {weekStart: Date, weekEnd: Date}
+   * return week start and end date according to specific year and week, result like: {weekStart: Date, weekEnd: Date}
    * @param year year
    * @param n week number
    */
@@ -69,7 +69,7 @@ export default class WeekUtil {
   }
 
   /**
-   * return a specific date's week
+   * return current week according to a specific date
    * @param date the date
    */
   curWeek(date?: Date) {
