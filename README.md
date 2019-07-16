@@ -19,7 +19,9 @@ The first week (numbered 1) of any given year is the week which contains January
 
 # Install
 
-`npm install week-utils`
+```
+npm install week-utils
+```
 
 # The doy calculate rule
 
