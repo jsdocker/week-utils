@@ -132,7 +132,12 @@ export default class WeekUtil {
    * @param input the year
    */
   localWeeks(input: number) {
-    return this.weeksInYear(input, this.dow, this.doy);
+    const mom = new Date()
+    let year = mom.getFullYear();
+    if(input) {
+      year = input;
+    }
+    return this.weeksInYear(year, this.dow, this.doy);
   }
 
   weeksInYear(year: number, dow: number, doy: number) {
