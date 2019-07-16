@@ -26,7 +26,7 @@ The first week (numbered 1) of any given year is the week which contains January
 the default week system is IOS 8601, the params is:
 
 - dow : 1 (1st day of week is Monday)
-- doy : 4 (`doy` is calculated as `7 + dow - janX`, where `janX` is the `x-th` January that must belong to the week No. 1. --(7 + 1 - 4))
+- doy : 4 (`doy` is calculated as `7 + dow - janX`, where `janX` is the `x-th` January that must belong to the week No. 1. )(7 + 1 - 4)
 - firstDay: 1 (Monday)
 - lastDay: 7 (Sunday)
 
@@ -34,7 +34,7 @@ the default week system is IOS 8601, the params is:
 you can send param dow: 0, doy: 6 to use the North American system.
 
 - dow : 0 (1st day of week is Sunday)
-- doy : 6 (1st week of the year is the one that contains the 1st of January (7 + 0 - 1))
+- doy : 6 (1st week of the year is the one that contains the 1st of January)(7 + 0 - 1)
 - firstDay: 0 (Sunday)
 - lastDay: 6 (Saturday)
 
