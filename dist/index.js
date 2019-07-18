@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var WeekUtil = /** @class */ (function () {
+var WeekUtils = /** @class */ (function () {
     /**
      * constructor
-     * @param dow default：1
-     * @param doy default：4
+     * @param dow default：1 (1st day of week is Monday)
+     * @param doy default：4 (The week that contains Jan 4th is the first week of the year)
      */
-    function WeekUtil(dow, doy) {
+    function WeekUtils(dow, doy) {
         this.dow = 1;
         this.doy = 4;
         this.firstDay = 1;
@@ -23,7 +23,7 @@ var WeekUtil = /** @class */ (function () {
      * @param year year
      * @param n week number
      */
-    WeekUtil.prototype.getWeekDate = function (year, n) {
+    WeekUtils.prototype.getWeekDate = function (year, n) {
         var start = this.dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
         var end = this.dayOfYearFromWeeks(year, n, this.lastDay, this.dow, this.doy);
         return {
@@ -31,7 +31,7 @@ var WeekUtil = /** @class */ (function () {
             weekEnd: this.getDayOfYear(year, end.dayOfYear)
         };
     };
-    WeekUtil.prototype.dayOfYearFromWeeks = function (year, week, weekday, dow, doy) {
+    WeekUtils.prototype.dayOfYearFromWeeks = function (year, week, weekday, dow, doy) {
         var localWeekday = (7 + weekday - dow) % 7, weekOffset = this.firstWeekOffset(year, dow, doy), dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset, resYear, resDayOfYear;
         if (dayOfYear <= 0) {
             resYear = year - 1;
@@ -50,7 +50,7 @@ var WeekUtil = /** @class */ (function () {
             dayOfYear: resDayOfYear
         };
     };
-    WeekUtil.prototype.getDayOfYear = function (year, n) {
+    WeekUtils.prototype.getDayOfYear = function (year, n) {
         var startOfYear = new Date(year, 0, 1);
         startOfYear.setDate(startOfYear.getDate() + (n - 1));
         return startOfYear;
@@ -59,7 +59,7 @@ var WeekUtil = /** @class */ (function () {
      * return current week according to a specific date
      * @param date the date
      */
-    WeekUtil.prototype.curWeek = function (date) {
+    WeekUtils.prototype.curWeek = function (date) {
         var mom = new Date();
         if (date) {
             mom = date;
@@ -67,10 +67,10 @@ var WeekUtil = /** @class */ (function () {
         var week = this.localeWeek(mom);
         return week;
     };
-    WeekUtil.prototype.localeWeek = function (mom) {
+    WeekUtils.prototype.localeWeek = function (mom) {
         return this.weekOfYear(mom, this.dow, this.doy).week;
     };
-    WeekUtil.prototype.weekOfYear = function (mom, dow, doy) {
+    WeekUtils.prototype.weekOfYear = function (mom, dow, doy) {
         var weekOffset = this.firstWeekOffset(mom.getFullYear(), dow, doy), week = Math.floor((this.dayOfYear(mom) - weekOffset - 1) / 7) + 1, resWeek, resYear;
         if (week < 1) {
             resYear = mom.getFullYear() - 1;
@@ -89,11 +89,11 @@ var WeekUtil = /** @class */ (function () {
             year: resYear
         };
     };
-    WeekUtil.prototype.dayOfYear = function (mom) {
+    WeekUtils.prototype.dayOfYear = function (mom) {
         var dayOfYear = Math.round((this.startOf('day', mom) - this.startOf('year', mom)) / 864e5) + 1;
         return dayOfYear;
     };
-    WeekUtil.prototype.startOf = function (untis, mom) {
+    WeekUtils.prototype.startOf = function (untis, mom) {
         var time = 0;
         switch (untis) {
             case 'year':
@@ -109,7 +109,7 @@ var WeekUtil = /** @class */ (function () {
      * return the total weeks in a year
      * @param input the year
      */
-    WeekUtil.prototype.localWeeks = function (input) {
+    WeekUtils.prototype.localWeeks = function (input) {
         var mom = new Date();
         var year = mom.getFullYear();
         if (input) {
@@ -117,17 +117,17 @@ var WeekUtil = /** @class */ (function () {
         }
         return this.weeksInYear(year, this.dow, this.doy);
     };
-    WeekUtil.prototype.weeksInYear = function (year, dow, doy) {
+    WeekUtils.prototype.weeksInYear = function (year, dow, doy) {
         var weekOffset = this.firstWeekOffset(year, dow, doy);
         var weekOffsetNext = this.firstWeekOffset(year + 1, dow, doy);
         return (this.daysInYear(year) - weekOffset + weekOffsetNext) / 7;
     };
-    WeekUtil.prototype.firstWeekOffset = function (year, dow, doy) {
+    WeekUtils.prototype.firstWeekOffset = function (year, dow, doy) {
         var fwd = 7 + dow - doy;
         var fwdlw = (7 + this.createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
         return -fwdlw + fwd - 1;
     };
-    WeekUtil.prototype.createUTCDate = function (y, m, d) {
+    WeekUtils.prototype.createUTCDate = function (y, m, d) {
         var date;
         // the Date.UTC function remaps years 0-99 to 1900-1999
         if (y < 100 && y >= 0) {
@@ -141,12 +141,12 @@ var WeekUtil = /** @class */ (function () {
         }
         return date;
     };
-    WeekUtil.prototype.daysInYear = function (year) {
+    WeekUtils.prototype.daysInYear = function (year) {
         return this.isLeapYear(year) ? 366 : 365;
     };
-    WeekUtil.prototype.isLeapYear = function (year) {
+    WeekUtils.prototype.isLeapYear = function (year) {
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
     };
-    return WeekUtil;
+    return WeekUtils;
 }());
-exports.default = WeekUtil;
+exports.default = WeekUtils;

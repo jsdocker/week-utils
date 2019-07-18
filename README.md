@@ -45,6 +45,9 @@ you can send param dow: 0, doy: 6 to use the North American system.
 >the corresponding fields - firstDay: 0 (Sunday) lastDay: 6 (Saturday)
 
 ```js
+// const WeekUtils = require("week-utils").default;
+import WeekUtils from "week-utils";
+
 // IOS 8601, default
 const weekUtils = new WeekUtils();
 // get the total weeks of a year

@@ -1,12 +1,12 @@
-export default class WeekUtil {
+export default class WeekUtils {
     dow: number;
     doy: number;
     firstDay: number;
     lastDay: number;
     /**
      * constructor
-     * @param dow default：1
-     * @param doy default：4
+     * @param dow default：1 (1st day of week is Monday)
+     * @param doy default：4 (The week that contains Jan 4th is the first week of the year)
      */
     constructor(dow?: number, doy?: number);
     /**
