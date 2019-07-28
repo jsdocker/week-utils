@@ -1,5 +1,100 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * week utils
+ */
+function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
+    var localWeekday = (7 + weekday - dow) % 7, weekOffset = firstWeekOffset(year, dow, doy), dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset, resYear, resDayOfYear;
+    if (dayOfYear <= 0) {
+        resYear = year - 1;
+        resDayOfYear = daysInYear(resYear) + dayOfYear;
+    }
+    else if (dayOfYear > daysInYear(year)) {
+        resYear = year + 1;
+        resDayOfYear = dayOfYear - daysInYear(year);
+    }
+    else {
+        resYear = year;
+        resDayOfYear = dayOfYear;
+    }
+    return {
+        year: resYear,
+        dayOfYear: resDayOfYear
+    };
+}
+function getDayOfYear(year, n) {
+    var startOfYear = new Date(year, 0, 1);
+    startOfYear.setDate(startOfYear.getDate() + (n - 1));
+    return startOfYear;
+}
+function localeWeek(mom, dow, doy) {
+    return weekOfYear(mom, dow, doy).week;
+}
+function weekOfYear(mom, dow, doy) {
+    var weekOffset = firstWeekOffset(mom.getFullYear(), dow, doy), week = Math.floor((dayOfYear(mom) - weekOffset - 1) / 7) + 1, resWeek, resYear;
+    if (week < 1) {
+        resYear = mom.getFullYear() - 1;
+        resWeek = week + weeksInYear(resYear, dow, doy);
+    }
+    else if (week > weeksInYear(mom.getFullYear(), dow, doy)) {
+        resWeek = week - weeksInYear(mom.getFullYear(), dow, doy);
+        resYear = mom.getFullYear() + 1;
+    }
+    else {
+        resYear = mom.getFullYear();
+        resWeek = week;
+    }
+    return {
+        week: resWeek,
+        year: resYear
+    };
+}
+function dayOfYear(mom) {
+    var dayOfYear = Math.round((startOf('day', mom) - startOf('year', mom)) / 864e5) + 1;
+    return dayOfYear;
+}
+function startOf(untis, mom) {
+    var time = 0;
+    switch (untis) {
+        case 'year':
+            time = new Date(mom.getFullYear(), 0, 1).valueOf();
+            break;
+        case 'day':
+            time = new Date(mom.getFullYear(), mom.getMonth(), mom.getDate()).valueOf();
+            break;
+    }
+    return time;
+}
+function weeksInYear(year, dow, doy) {
+    var weekOffset = firstWeekOffset(year, dow, doy);
+    var weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
+    return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+}
+function firstWeekOffset(year, dow, doy) {
+    var fwd = 7 + dow - doy;
+    var fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+    return -fwdlw + fwd - 1;
+}
+function createUTCDate(y, m, d) {
+    var date;
+    // the Date.UTC function remaps years 0-99 to 1900-1999
+    if (y < 100 && y >= 0) {
+        date = new Date(Date.UTC.apply(null, [y + 400, m, d]));
+        if (isFinite(date.getUTCFullYear())) {
+            date.setUTCFullYear(y);
+        }
+    }
+    else {
+        date = new Date(Date.UTC.apply(null, [y, m, d]));
+    }
+    return date;
+}
+function daysInYear(year) {
+    return isLeapYear(year) ? 366 : 365;
+}
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
 var WeekUtils = /** @class */ (function () {
     /**
      * constructor
@@ -24,36 +119,12 @@ var WeekUtils = /** @class */ (function () {
      * @param n week number
      */
     WeekUtils.prototype.getWeekDate = function (year, n) {
-        var start = this.dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
-        var end = this.dayOfYearFromWeeks(year, n, this.lastDay, this.dow, this.doy);
+        var start = dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
+        var end = dayOfYearFromWeeks(year, n, this.lastDay, this.dow, this.doy);
         return {
-            weekStart: this.getDayOfYear(year, start.dayOfYear),
-            weekEnd: this.getDayOfYear(year, end.dayOfYear)
+            weekStart: getDayOfYear(year, start.dayOfYear),
+            weekEnd: getDayOfYear(year, end.dayOfYear)
         };
-    };
-    WeekUtils.prototype.dayOfYearFromWeeks = function (year, week, weekday, dow, doy) {
-        var localWeekday = (7 + weekday - dow) % 7, weekOffset = this.firstWeekOffset(year, dow, doy), dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset, resYear, resDayOfYear;
-        if (dayOfYear <= 0) {
-            resYear = year - 1;
-            resDayOfYear = this.daysInYear(resYear) + dayOfYear;
-        }
-        else if (dayOfYear > this.daysInYear(year)) {
-            resYear = year + 1;
-            resDayOfYear = dayOfYear - this.daysInYear(year);
-        }
-        else {
-            resYear = year;
-            resDayOfYear = dayOfYear;
-        }
-        return {
-            year: resYear,
-            dayOfYear: resDayOfYear
-        };
-    };
-    WeekUtils.prototype.getDayOfYear = function (year, n) {
-        var startOfYear = new Date(year, 0, 1);
-        startOfYear.setDate(startOfYear.getDate() + (n - 1));
-        return startOfYear;
     };
     /**
      * return current week according to a specific date
@@ -64,46 +135,8 @@ var WeekUtils = /** @class */ (function () {
         if (date) {
             mom = date;
         }
-        var week = this.localeWeek(mom);
+        var week = localeWeek(mom, this.dow, this.doy);
         return week;
-    };
-    WeekUtils.prototype.localeWeek = function (mom) {
-        return this.weekOfYear(mom, this.dow, this.doy).week;
-    };
-    WeekUtils.prototype.weekOfYear = function (mom, dow, doy) {
-        var weekOffset = this.firstWeekOffset(mom.getFullYear(), dow, doy), week = Math.floor((this.dayOfYear(mom) - weekOffset - 1) / 7) + 1, resWeek, resYear;
-        if (week < 1) {
-            resYear = mom.getFullYear() - 1;
-            resWeek = week + this.weeksInYear(resYear, dow, doy);
-        }
-        else if (week > this.weeksInYear(mom.getFullYear(), dow, doy)) {
-            resWeek = week - this.weeksInYear(mom.getFullYear(), dow, doy);
-            resYear = mom.getFullYear() + 1;
-        }
-        else {
-            resYear = mom.getFullYear();
-            resWeek = week;
-        }
-        return {
-            week: resWeek,
-            year: resYear
-        };
-    };
-    WeekUtils.prototype.dayOfYear = function (mom) {
-        var dayOfYear = Math.round((this.startOf('day', mom) - this.startOf('year', mom)) / 864e5) + 1;
-        return dayOfYear;
-    };
-    WeekUtils.prototype.startOf = function (untis, mom) {
-        var time = 0;
-        switch (untis) {
-            case 'year':
-                time = new Date(mom.getFullYear(), 0, 1).valueOf();
-                break;
-            case 'day':
-                time = new Date(mom.getFullYear(), mom.getMonth(), mom.getDate()).valueOf();
-                break;
-        }
-        return time;
     };
     /**
      * return the total weeks in a year
@@ -115,37 +148,7 @@ var WeekUtils = /** @class */ (function () {
         if (input) {
             year = input;
         }
-        return this.weeksInYear(year, this.dow, this.doy);
-    };
-    WeekUtils.prototype.weeksInYear = function (year, dow, doy) {
-        var weekOffset = this.firstWeekOffset(year, dow, doy);
-        var weekOffsetNext = this.firstWeekOffset(year + 1, dow, doy);
-        return (this.daysInYear(year) - weekOffset + weekOffsetNext) / 7;
-    };
-    WeekUtils.prototype.firstWeekOffset = function (year, dow, doy) {
-        var fwd = 7 + dow - doy;
-        var fwdlw = (7 + this.createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
-        return -fwdlw + fwd - 1;
-    };
-    WeekUtils.prototype.createUTCDate = function (y, m, d) {
-        var date;
-        // the Date.UTC function remaps years 0-99 to 1900-1999
-        if (y < 100 && y >= 0) {
-            date = new Date(Date.UTC.apply(null, [y + 400, m, d]));
-            if (isFinite(date.getUTCFullYear())) {
-                date.setUTCFullYear(y);
-            }
-        }
-        else {
-            date = new Date(Date.UTC.apply(null, [y, m, d]));
-        }
-        return date;
-    };
-    WeekUtils.prototype.daysInYear = function (year) {
-        return this.isLeapYear(year) ? 366 : 365;
-    };
-    WeekUtils.prototype.isLeapYear = function (year) {
-        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        return weeksInYear(year, this.dow, this.doy);
     };
     return WeekUtils;
 }());
