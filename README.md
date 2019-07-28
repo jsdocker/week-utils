@@ -57,8 +57,8 @@ const aDate = new Date(2019, 7-1, 14);
 // get the current week number of the year
 weekUtils.curWeek(aDate); //28
 // get the start and end date of a week
-weekUtils.getWeekDate(2019, 28).weekStart // 2019-07-08
-weekUtils.getWeekDate(2019, 28).weekEnd // 2019-07-14
+weekUtils.getWeekDate(2019, 28).weekStart // 2019-07-08 (Date)
+weekUtils.getWeekDate(2019, 28).weekEnd // 2019-07-14 (Date)
 
 // North American system
 const weekUtils = new WeekUtils(0, 6); // params: dow=0, doy=6

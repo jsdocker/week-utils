@@ -1,6 +1,6 @@
 {
   "name": "week-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "typescript"
   ],
   "author": "jsdocker",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jsdocker/week-utils/issues"
   },
