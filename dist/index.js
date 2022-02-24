@@ -1,8 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * week utils
- */
 function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
     var localWeekday = (7 + weekday - dow) % 7, weekOffset = firstWeekOffset(year, dow, doy), dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset, resYear, resDayOfYear;
     if (dayOfYear <= 0) {
@@ -77,7 +74,6 @@ function firstWeekOffset(year, dow, doy) {
 }
 function createUTCDate(y, m, d) {
     var date;
-    // the Date.UTC function remaps years 0-99 to 1900-1999
     if (y < 100 && y >= 0) {
         date = new Date(Date.UTC.apply(null, [y + 400, m, d]));
         if (isFinite(date.getUTCFullYear())) {
@@ -95,12 +91,7 @@ function daysInYear(year) {
 function isLeapYear(year) {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
-var WeekUtils = /** @class */ (function () {
-    /**
-     * constructor
-     * @param dow default：1 (1st day of week is Monday)
-     * @param doy default：4 (The week that contains Jan 4th is the first week of the year)
-     */
+var WeekUtils = (function () {
     function WeekUtils(dow, doy) {
         this.dow = 1;
         this.doy = 4;
@@ -113,11 +104,6 @@ var WeekUtils = /** @class */ (function () {
             this.lastDay = 6;
         }
     }
-    /**
-     * return week start and end date according to specific year and week, result like: {weekStart: Date, weekEnd: Date}
-     * @param year year
-     * @param n week number
-     */
     WeekUtils.prototype.getWeekDate = function (year, n) {
         var start = dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
         var end = dayOfYearFromWeeks(year, n, this.lastDay, this.dow, this.doy);
@@ -126,10 +112,6 @@ var WeekUtils = /** @class */ (function () {
             weekEnd: getDayOfYear(end.year, end.dayOfYear)
         };
     };
-    /**
-     * return current week according to a specific date
-     * @param date the date
-     */
     WeekUtils.prototype.curWeek = function (date) {
         var mom = new Date();
         if (date) {
@@ -138,10 +120,6 @@ var WeekUtils = /** @class */ (function () {
         var week = localeWeek(mom, this.dow, this.doy);
         return week;
     };
-    /**
-     * return the total weeks in a year
-     * @param input the year
-     */
     WeekUtils.prototype.localWeeks = function (input) {
         var mom = new Date();
         var year = mom.getFullYear();
