@@ -146,8 +146,8 @@ export default class WeekUtils {
     const start = dayOfYearFromWeeks(year, n, this.firstDay, this.dow, this.doy);
     const end = dayOfYearFromWeeks(year, n, this.lastDay, this.dow, this.doy);
     return {
-      weekStart: getDayOfYear(year, start.dayOfYear),
-      weekEnd: getDayOfYear(year, end.dayOfYear)
+      weekStart: getDayOfYear(start.year, start.dayOfYear),
+      weekEnd: getDayOfYear(end.year, end.dayOfYear)
     };
   }
 
